@@ -4,6 +4,8 @@ local player = nil
 local velclamp = 10
 local W = 240
 local H = 136
+local GRAV_FORCE = 9.8
+
 local Player = {}
 function Player.new(x,y)
 	local self = {}
@@ -84,6 +86,8 @@ function Player.new(x,y)
 			self.vely = self.vely - forcey
 		end
 
+		-- apply grav no matter what
+		self.vely = self.vely + GRAV_FORCE*dt
 
 		-- clamp velocity
 		if self.velx > velclamp then
