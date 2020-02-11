@@ -145,6 +145,14 @@ function Player.new(x,y)
 			sprnum = 1
 			-- neutral
 		end
+
+		-- debug
+		pix(self.x,self.y,6)
+        pix(self.x+8,self.y+8,6)
+        pix(self.x+8,self.y,6)
+        pix(self.x,self.y+8,6)
+
+		-- real sprite
 		spr(sprnum,self.x,self.y,
 		0, -- color key (transparent color)
 		1, -- scale
