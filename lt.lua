@@ -1,7 +1,7 @@
 local dt = 0
 local pt = 0
 local player = nil
-local velclamp = 9
+local velclamp = 20
 local W = 240
 local H = 136
 local GRAV_FORCE = 9.8
@@ -49,14 +49,17 @@ function Player.new(x,y)
 		-- collision handling
 		function solid(x,y)
 			-- currently 32 is solid
+			-- trace(x//8 .. " " .. y//8)
 			return mget(x//8,y//8) == 32
 		end
+		
 		-- where are we moving
 		local posx = self.x + self.velx*dt
 		local posy = self.y + self.vely*dt
 		  
 		if solid(posx,posy) then
 			trace("hit")
+			trace(posx//8 .. " " .. posy//8)
 		end
 
 		-- move it
@@ -106,12 +109,22 @@ function Player.new(x,y)
 		self.vely = self.vely + GRAV_FORCE*dt
 
 		-- clamp velocity
-		if self.velx > velclamp then
-			self.velx = velclamp
+		
+		if math.abs(self.velx)>velclamp then
+			if self.velx>0 then
+				self.velx = velclamp
+			else
+				self.velx = -velclamp
+			end
 		end
-		if self.vely > velclamp then
-			self.vely = velclamp
+		if math.abs(self.vely)>velclamp then
+			if self.vely>0 then
+				self.vely = velclamp
+			else
+				self.vely = -velclamp
+			end
 		end
+		
 	end
 	function self:draw()
 		local sprnum = 1
@@ -147,11 +160,12 @@ function update(dt)
 end
 function draw()
 	cls(0)
-	map(0,0,15,15)
+	map(0,0,25,15)
 	player:draw()
 end
 function init()
 	player = Player.new(100,100)
+	-- trace("mget00: " .. mget(0,0))
 end
 init()
 function TIC()
