@@ -54,7 +54,12 @@ function Player.new(x,y)
 			-- trace(x//8 .. " " .. y//8)
 			return mget(x//8,(y+8)//8) == 32
 		end
-		
+		function solidright(x,y)
+			return mget((x+8)//8,(y)//8) == 32
+		end
+		function solidleftorup(x,y)
+			return mget((x)//8,(y)//8) == 32
+		end
 		-- where are we moving
 		local posx = self.x + self.velx*dt
 		local posy = self.y + self.vely*dt
@@ -67,6 +72,8 @@ function Player.new(x,y)
 			end
 			self.velx = 0
 			self.vely = 0
+		elseif solidright(posx,posy) or solidleftorup(posx,posy) then
+			self.velx = 0
 		else
 			-- move it
 			self.x = posx
