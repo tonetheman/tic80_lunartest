@@ -1,12 +1,14 @@
 local dt = 0
 local pt = 0
-local player = nil
 local velclamp = 20
 local W = 240
 local H = 136
 local GRAV_FORCE = 9.8
-
+local current_scene = nil
 local Player = {}
+local MenuScene = {}
+local GameScen = {}
+
 function Player.new(x,y)
 	local self = {}
 	self.x = x
@@ -169,19 +171,66 @@ function Player.new(x,y)
 	end
 	return self
 end
+
+function MenuScene.new()
+	local self = {}
+	function self:enter()
+	end
+	function self:exit()
+	end
+	function self:update()
+	end
+	function self:draw()
+	end
+	return self
+end
+
+--[[
+	TODO: what is wrong with self
+	changed to selfi and it worked?
+	is that special in the enter?
+	does not make sense
+]]
+function GameScen.new()
+	local selfi = {}
+	selfi.player = nil
+	-- self.player = Player.new(80,80)
+	function selfi:enter()
+		-- trace("enter")
+		selfi.player = Player.new(80,80)
+		-- trace("enter finished")
+	end
+	function selfi:exit()
+	end
+	function selfi:update(dt)
+		self.player:update(dt)
+	end
+	function selfi:draw()
+		cls(0)
+		map(0,0,25,15)
+		self.player:draw()
+	end
+	return selfi
+end
+
 function update(dt)
-	player:update(dt)
+	-- trace("update")
+	current_scene:update(dt)
 end
+
 function draw()
-	cls(0)
-	map(0,0,25,15)
-	player:draw()
+	current_scene:draw()
 end
+
 function init()
-	player = Player.new(80,80)
-	-- trace("mget00: " .. mget(0,0))
+	trace("init started")
+	local s = GameScen.new()
+	current_scene = s
+	current_scene.enter()
+	trace("init stopped")
 end
 init()
+
 function TIC()
     -- calculate delta time
     dt=time()-pt
